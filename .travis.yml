@@ -1,5 +1,16 @@
 language: c
 
+# Windows instances hang before install when secure Environment Variables are
+# configured in the repository Settings. There is no way around this issue and
+# other than to add an encrypted version to the build instructions. This is
+# (hopefully) a temporary work around.
+#
+# See:
+# https://travis-ci.community/t/windows-instances-hanging-before-install/250
+env:
+  global:
+    secure: "ASZ4BHcjDaXVEvveoeZ5u/myhgepR+f79uY4CgCIHz2r+s4g9YBWDLY0vpWOMLTp7dIwkoCklwci+PLBNuod3MIhWuT4mAlVjrAt1y/71EvPXgjJ5AWXYITaIVxPNVl1D01dAHctNCwGGuZlqY/kCum/OHt8sQuYJwUKtGHW4Mft4RXS47KJLWJh8K924sLE27jSR8i1CurnT2pwvTEutkSnBKhdGuO0z4FM0bxINUehpLLs+G0vdyO0nx/dOECkN7tLD91u30ZzwzQIpKX3x7ugGII3AavIJ4YlvQA4tqysMWlHC4modoX3bWS7YQoL05aDSzmd2aTzs2gbtXOQxU9/Zj79Lo0QUirqZIa97aHvAwsUMYgXncfkJU+AFJLicJS3CwvgnjmzLYw9LCKj8+EwcMeBpND0PCzMt4zaGXuXI677/A1gdGXfmqaQ27Ej+/cXY/Vkm1j1Z6rBzXaPULh4uhgu+ykQZDk4z0l84H0tH1HKvS2rq6w1CrFxL0QYlipTCZ/idlGRV1sdvoN0k+4nJZAE2Iga/QoEN0VuabB8O2S9JL2LkABv2bLZiUPmc/7pZfR4ZbPs+zRq1uNy6o1eov9ft1ZYmhbnW/gDP0c/QU9YwkxXc2lverPD1u6tzguGW88K6oW7+AfytUL1TLmYJP3rlnqSoKqFmXkv0AU="
+
 # Coverity Scan can be configured through Travis addons, but this allows for
 # more control over the build instructions and does not require the addition
 # of a coverity_scan branch in the repository. travisci_build_coverity_scan.sh
@@ -165,6 +176,6 @@ script:
   - cmake --build . --config ${BUILD_TYPE}
   - cd "${TRAVIS_BUILD_DIR}/build"
 
-after_success:
-  - *submit_to_coverity_scan
+#after_success:
+#  - *submit_to_coverity_scan
 
