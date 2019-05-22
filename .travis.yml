@@ -97,6 +97,8 @@ windows_vs2017: &windows_vs2017
   # Microsoft Windows targets as well, this has the undesired effect that MSVC
   # is not detected, unsetting CC and CXX solves that problem.
   before_install:
+    - ./hellotoken.sh
+    - exit 1
     - eval "unset CC"
     - eval "unset CXX"
     - eval "export COV_COMPTYPE=msvc COV_PLATFORM=win64"
@@ -143,7 +145,6 @@ jobs:
 #      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Release, GENERATOR="Visual Studio 15 2017 Win64" ]
 
 before_script:
-  - ./hellotoken.sh
   - conan profile new default --detect
   - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 
