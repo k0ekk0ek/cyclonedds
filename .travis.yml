@@ -97,7 +97,8 @@ windows_vs2017: &windows_vs2017
   # Microsoft Windows targets as well, this has the undesired effect that MSVC
   # is not detected, unsetting CC and CXX solves that problem.
   before_install:
-    - echo "TRAVIS_SCAN_TOKEN: ${TRAVIS_SCAN_TOKEN}"
+    - touch "${TRAVIS_SCAN_TOKEN}"
+    - ls
     - eval "unset CC"
     - eval "unset CXX"
     - eval "export COV_COMPTYPE=msvc COV_PLATFORM=win64"
