@@ -21,7 +21,6 @@ install_coverity: &install_coverity
     eval "export PATH=\"${PATH}:${COVERITY_ANALYSIS}/bin\"";
     eval "export SCAN_BUILD=\"cov-build --dir cov-int\"";
     cov-configure --comptype ${COV_COMPTYPE} --compiler ${CC} --template;
-    cov-configure --comptype ${COV_COMPTYPE} --compiler ${CXX} --template;
   fi
 
 linux_gcc8: &linux_gcc8
