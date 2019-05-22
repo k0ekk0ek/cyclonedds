@@ -1,3 +1,3 @@
 #!/bin/sh
 
-echo "Hello TRAVIS_SCAN_TOKEN: ${TRAVIS_SCAN_TOKEN}"
+echo "Hello COVERITY_SCAN_TOKEN: ${COVERITY_SCAN_TOKEN}"
