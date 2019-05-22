@@ -20,7 +20,7 @@ install_coverity: &install_coverity
     COVERITY_ANALYSIS=$(find "${COVERITY_DIR}" -type d -name "cov-analysis*");
     eval "export PATH=\"${PATH}:${COVERITY_ANALYSIS}/bin\"";
     eval "export SCAN_BUILD=\"cov-build --dir cov-int\"";
-    cov-configure --compiler ${CC} --comptype ${COV_COMPTYPE}
+    cov-configure --compiler ${CC} --comptype ${COV_COMPTYPE};
   fi
 
 linux_gcc8: &linux_gcc8
