@@ -113,13 +113,10 @@ windows_vs2017: &windows_vs2017
     - innoextract conan-win-64_1_10_0.exe
     - eval "export PATH=\"$(pwd)/app/conan:${PATH}\""
 
-# Environment variables are used to
-env: [ ARCH=x86_64, ASAN=none, GENERATOR="Unix Makefiles" ]
-
 jobs:
   include:
     - <<: *linux_gcc8
-      env: [ BUILD_TYPE=Debug, COVERITY_SCAN=true ]
+      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles", COVERITY_SCAN=true ]
 #      if: type = cron
 #    - <<: *linux_gcc8
 #      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles" ]
