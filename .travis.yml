@@ -34,7 +34,8 @@ linux_gcc8: &linux_gcc8
   before_install:
     - eval "export CC=gcc-8"
     - eval "export CXX=g++-8"
-  install: *install_coverity
+  install:
+    <<: *install_coverity
     - pip install conan --upgrade --user
 
 linux_clang: &linux_clang
