@@ -163,6 +163,7 @@ script:
           ${CMAKE_LINKER_FLAGS}
           -G "${GENERATOR}" ..
   - cmake --build . --config ${BUILD_TYPE}
+  - cd "${TRAVIS_BUILD_DIR}/build"
 
 after_success:
   - *submit_to_coverity_scan
