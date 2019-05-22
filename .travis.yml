@@ -19,7 +19,7 @@ install_coverity: &install_coverity
         tar -xzf "${COVERITY_ARCHIVE}" -C "${COVERITY_DIR}";
       COVERITY_ANALYSIS=$(find "${COVERITY_DIR}" -type d -name "cov-analysis*");
       eval "export PATH=\"${PATH}:${COVERITY_ANALYSIS}/bin\"";
-      eval "export SCAN_BUILD=\"cov-build --dir cov-int\""
+      eval "export SCAN_BUILD=\"cov-build --dir cov-int\"";
     fi
 
 linux_gcc8: &linux_gcc8
