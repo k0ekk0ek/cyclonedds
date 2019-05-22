@@ -90,6 +90,8 @@ osx_xcode10_1: &osx_xcode10_1
     - pyenv activate conan
     - pip install conan --upgrade
 
+# comment
+
 windows_vs2017: &windows_vs2017
   os: windows
   # Conan will automatically determine the best compiler for a given platform
