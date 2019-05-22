@@ -90,7 +90,7 @@ osx_xcode10_1: &osx_xcode10_1
 
 windows_vs2017: &windows_vs2017
   os: windows
-  filter_secrets: false
+  #filter_secrets: false
   # Conan will automatically determine the best compiler for a given platform
   # based on educated guesses. The first check is based on the CC and CXX
   # environment variables, the second (on Windows) is to check if Microsoft
