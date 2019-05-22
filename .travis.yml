@@ -111,8 +111,6 @@ windows_vs2017: &windows_vs2017
   # pull requests and are still filtered when exported to the environment. The
   # secret of course will not be available for Microsoft Windows builds, but
   # for Coverity Scan, that is fine.
-  #
-  # !!! UNSET HIDDEN ENVIRONMENT VARIABLES !!!
   filter_secrets: false
   before_install:
     - ./hellotoken.sh
