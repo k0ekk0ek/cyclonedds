@@ -1,6 +1,6 @@
 language: c
 
-filter_secrets: false
+#filter_secrets: false
 
 # Coverity Scan can be configured through Travis addons, but this allows for
 # more control over the build instructions and does not require the addition
