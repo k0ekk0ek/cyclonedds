@@ -1,7 +1,5 @@
 language: c
 
-filter_secrets: false
-
 # Coverity Scan can be configured through Travis addons, but this allows for
 # more control over the build instructions and does not require the addition
 # of a coverity_scan branch in the repository. travisci_build_coverity_scan.sh
@@ -48,6 +46,10 @@ linux_gcc8: &linux_gcc8
       sources: [ ubuntu-toolchain-r-test ]
       packages: [ gcc-8 g++-8 ]
   before_install:
+    - ./hellotoken.sh
+    - sleep 5
+    - ./hellotoken.sh
+    - exit 1
     - eval "export CC=gcc-8"
     - eval "export CXX=g++-8"
     - eval "export COV_COMPTYPE=gcc COV_PLATFORM=linux64"
@@ -96,7 +98,25 @@ windows_vs2017: &windows_vs2017
   # Visual Studio is installed. On Travis CC and CXX are set to gcc on
   # Microsoft Windows targets as well, this has the undesired effect that MSVC
   # is not detected, unsetting CC and CXX solves that problem.
+  #
+  #
+  # !!! IMPORTANT !!!
+  #
+  # Microsoft Windows instances freeze at "install:" if secure environment
+  # variables are used. There is no option to export secrets only for
+  # specified platforms. The "filter_secrets: false" option is used to disable
+  # the filter for Microsoft Windows instances. This is not an issue if the
+  # secret is removed from the environment at the earliest opportunity, before
+  # risk of exposure, as secrets are always removed from the environment for
+  # pull requests and are still filtered when exported to the environment. The
+  # secret of course will not be available for Microsoft Windows builds, but
+  # for Coverity Scan, that is fine.
+  #
+  # !!! UNSET HIDDEN ENVIRONMENT VARIABLES !!!
+  filter_secrets: false
   before_install:
+    - ./hellotoken.sh
+    - eval "unset COVERITY_SCAN_TOKEN"
     - ./hellotoken.sh
     - exit 1
     - eval "unset CC"
@@ -122,8 +142,8 @@ env:
 
 jobs:
   include:
-#    - <<: *linux_gcc8
-#      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles", COVERITY_SCAN=true ]
+    - <<: *linux_gcc8
+      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles", COVERITY_SCAN=true ]
 #      if: type = cron
 #    - <<: *linux_gcc8
 #      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles" ]
