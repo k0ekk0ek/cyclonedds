@@ -76,7 +76,7 @@ jobs:
   include:
     - <<: *linux_gcc8
       env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles",
-             COVERITY_SCAN=true, COVERITY_PLATFORM=Linux ]
+             COVERITY_SCAN=true, COVERITY_PLATFORM=linux64 ]
 #      if: type = cron
 #    - <<: *linux_gcc8
 #      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles" ]
@@ -102,26 +102,23 @@ before_script:
   - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   # Coverity Scan can be configured through Travis addons, but this allows for
   # more control over the build instructions and does not require the addition
-  # of a coverity_scan branch in the repository.
+  # of a specific branch in the repository. travisci_build_coverity_scan.sh
+  # does more checks before it decides to download Coverity (around 500MB),
+  # but these instructions assume Coverity Scan is not installed if the
+  # directory does not exist and expects the download to fail if the token is
+  # incorrect.
   - if [ -n "${COVERITY_SCAN}" ]; then
-      eval "export COVERITY_DIR=/tmp/coverity-scan-analysis";
-      eval "export COVERITY_ARCHIVE=/tmp/cov-analysis-${COVERITY_PLATFORM}.tgz";
-      curl -s -f -F project="${TRAVIS_REPO_SLUG}"
-                 -F token="${COVERITY_SCAN_TOKEN}"
-                 "https://scan.coverity.com/api/upload_permitted"
-        || exit 1;
-
-      if [ ! -d "${COVERITY_DIR}" ]; then
-        if [ ! -e "${COVERITY_ARCHIVE}" ]; then
-          curl -s -F project="${TRAVIS_REPO_SLUG}"
-                  -F token="${COVERITY_SCAN_TOKEN}"
-                  -o "${COVERITY_ARCHIVE}"
-                  "https://scan.coverity.com/download/cxx/${COVERITY_PLATFORM}";
-        fi
-        mkdir -p "${COVERITY_DIR}";
-        tar -xzf cov-analysis-${COVERITY_PLATFORM}.tar.gz -C "${COVERITY_DIR}";
-      fi
-      eval "export PATH=\"${PATH}:$(find \"${COVERITY_DIR}\" -type d -name 'cov-analysis*')\"";
+      COVERITY_DIR="/tmp/coverity-scan-analysis";
+      COVERITY_ARCHIVE="/tmp/cov-analysis-${COVERITY_PLATFORM}.tgz";
+      test ! -d "${COVERITY_DIR}" &&
+        mkdir -p "${COVERITY_DIR}" &&
+        curl -s -F project="${TRAVIS_REPO_SLUG}"
+                -F token="${COVERITY_SCAN_TOKEN}"
+                -o "${COVERITY_ARCHIVE}"
+                "https://scan.coverity.com/download/cxx/${COVERITY_PLATFORM}" &&
+        tar -xzf "${COVERITY_ARCHIVE}" -C "${COVERITY_DIR}";
+      COVERITY_ANALYSIS=$(find "${COVERITY_DIR}" -type d -name "cov-analysis*")
+      eval "export PATH=\"${PATH}:${COVERITY_ANALYSIS}/bin\"";
     fi
   - cov-build
 
