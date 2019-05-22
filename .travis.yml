@@ -9,17 +9,18 @@ language: c
 install_coverity: &install_coverity
   if [ -n "${COVERITY_SCAN}" ]; then
     COVERITY_DIR="/tmp/coverity-scan-analysis";
-    COVERITY_ARCHIVE="/tmp/cov-analysis-${COVERITY_PLATFORM}.tgz";
+    COVERITY_ARCHIVE="/tmp/cov-analysis-${COV_PLATFORM}.tgz";
     test ! -d "${COVERITY_DIR}" &&
       mkdir -p "${COVERITY_DIR}" &&
       curl -f -s -F project="${TRAVIS_REPO_SLUG}"
                  -F token="${COVERITY_SCAN_TOKEN}"
                  -o "${COVERITY_ARCHIVE}"
-                 "https://scan.coverity.com/download/cxx/${COVERITY_PLATFORM}" &&
+                 "https://scan.coverity.com/download/cxx/${COV_PLATFORM}" &&
       tar -xzf "${COVERITY_ARCHIVE}" -C "${COVERITY_DIR}";
     COVERITY_ANALYSIS=$(find "${COVERITY_DIR}" -type d -name "cov-analysis*");
     eval "export PATH=\"${PATH}:${COVERITY_ANALYSIS}/bin\"";
     eval "export SCAN_BUILD=\"cov-build --dir cov-int\"";
+    cov-configure --compiler ${CC} --comptype ${COV_COMPTYPE}
   fi
 
 linux_gcc8: &linux_gcc8
@@ -34,6 +35,7 @@ linux_gcc8: &linux_gcc8
   before_install:
     - eval "export CC=gcc-8"
     - eval "export CXX=g++-8"
+    - eval "export COV_COMPTYPE=gcc COV_PLATFORM=linux64"
   install:
     - *install_coverity
     - pip install conan --upgrade --user
@@ -48,6 +50,7 @@ linux_clang: &linux_clang
   before_install:
     - eval "export CC=clang"
     - eval "export CXX=clang++"
+    - eval "export COV_COMPTYPE=clang COV_PLATFORM=linux64"
   install:
     - pip install conan --upgrade --user
 
@@ -62,6 +65,7 @@ osx_xcode10_1: &osx_xcode10_1
   before_install:
     - eval "export CC=clang"
     - eval "export CXX=clang++"
+    - eval "export COV_COMPTYPE=clang COV_PLATFORM=macOSX"
   install:
     - eval "$(pyenv init -)"
     - pyenv virtualenv conan
@@ -80,6 +84,7 @@ windows_vs2017: &windows_vs2017
   before_install:
     - eval "unset CC"
     - eval "unset CXX"
+    - eval "export COV_COMPTYPE=msvc COV_PLATFORM=win64"
     - JAVA_HOME=$(find "/c/Program Files/Android/jdk/" -name "*openjdk*" | sort | head -n 1)
     - export JAVA_HOME
     - export PATH="${PATH}:${JAVA_HOME}/bin"
@@ -99,7 +104,7 @@ jobs:
   include:
     - <<: *linux_gcc8
       env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles",
-             COVERITY_SCAN=true, COVERITY_PLATFORM=linux64 ]
+             COVERITY_SCAN=true ]
 #      if: type = cron
 #    - <<: *linux_gcc8
 #      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles" ]
@@ -119,7 +124,6 @@ jobs:
 #      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Visual Studio 15 2017 Win64" ]
 #    - <<: *windows_vs2017
 #      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Release, GENERATOR="Visual Studio 15 2017 Win64" ]
-
 
 before_script:
   - conan profile new default --detect
