@@ -49,6 +49,8 @@ linux_gcc8: &linux_gcc8
       packages: [ gcc-8 g++-8 ]
   before_install:
     - ./hellotoken.sh
+    - sleep 5
+    - ./hellotoken.sh
     - exit 1
     - eval "export CC=gcc-8"
     - eval "export CXX=g++-8"
