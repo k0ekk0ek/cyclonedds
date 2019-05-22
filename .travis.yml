@@ -112,10 +112,10 @@ before_script:
       COVERITY_ARCHIVE="/tmp/cov-analysis-${COVERITY_PLATFORM}.tgz";
       test ! -d "${COVERITY_DIR}" &&
         mkdir -p "${COVERITY_DIR}" &&
-        curl -s -F project="${TRAVIS_REPO_SLUG}"
-                -F token="${COVERITY_SCAN_TOKEN}"
-                -o "${COVERITY_ARCHIVE}"
-                "https://scan.coverity.com/download/cxx/${COVERITY_PLATFORM}" &&
+        curl -f -s -F project="${TRAVIS_REPO_SLUG}"
+                   -F token="${COVERITY_SCAN_TOKEN}"
+                   -o "${COVERITY_ARCHIVE}"
+                   "https://scan.coverity.com/download/cxx/${COVERITY_PLATFORM}" &&
         tar -xzf "${COVERITY_ARCHIVE}" -C "${COVERITY_DIR}";
       COVERITY_ANALYSIS=$(find "${COVERITY_DIR}" -type d -name "cov-analysis*")
       eval "export PATH=\"${PATH}:${COVERITY_ANALYSIS}/bin\"";
