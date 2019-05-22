@@ -48,6 +48,7 @@ linux_gcc8: &linux_gcc8
       sources: [ ubuntu-toolchain-r-test ]
       packages: [ gcc-8 g++-8 ]
   before_install:
+    - ./hellotoken.sh
     - eval "export CC=gcc-8"
     - eval "export CXX=g++-8"
     - eval "export COV_COMPTYPE=gcc COV_PLATFORM=linux64"
@@ -90,14 +91,17 @@ osx_xcode10_1: &osx_xcode10_1
 
 windows_vs2017: &windows_vs2017
   os: windows
-  #filter_secrets: false
   # Conan will automatically determine the best compiler for a given platform
   # based on educated guesses. The first check is based on the CC and CXX
   # environment variables, the second (on Windows) is to check if Microsoft
   # Visual Studio is installed. On Travis CC and CXX are set to gcc on
   # Microsoft Windows targets as well, this has the undesired effect that MSVC
   # is not detected, unsetting CC and CXX solves that problem.
+  #
+  # Windows builds
+  filter_secrets: false
   before_install:
+    - eval "unset COVERITY_SCAN_TOKEN"
     - ./hellotoken.sh
     - exit 1
     - eval "unset CC"
@@ -123,8 +127,8 @@ env:
 
 jobs:
   include:
-#    - <<: *linux_gcc8
-#      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles", COVERITY_SCAN=true ]
+    - <<: *linux_gcc8
+      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles", COVERITY_SCAN=true ]
 #      if: type = cron
 #    - <<: *linux_gcc8
 #      env: [ ARCH=x86_64, ASAN=none, BUILD_TYPE=Debug, GENERATOR="Unix Makefiles" ]
