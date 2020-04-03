@@ -40,8 +40,20 @@ endif()
 add_cunit_executable(cunit_ddsrt ${sources})
 target_link_libraries(
   cunit_ddsrt PRIVATE ddsrt)
+
+add_cunit_executable(cunit_ddsrt_ipchange "ip_change.c")
+target_link_libraries(
+  cunit_ddsrt_ipchange PRIVATE ddsrt)
+if(WIN32)
+  target_link_libraries(
+      cunit_ddsrt_ipchange PRIVATE newdev Shlwapi Setupapi)
+endif()
+
 target_include_directories(
   cunit_ddsrt PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>")
+target_include_directories(
+  cunit_ddsrt_ipchange PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>")
+
 generate_dummy_export_header(
   cunit_ddsrt
   BASE_NAME dds
