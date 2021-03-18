@@ -1,1 +1,2 @@
 lets see if Coverity Scan still triggers for pull requests
+and without pr: none
